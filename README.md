@@ -1,6 +1,9 @@
 # SimHub Lap Record Plugin
 
-The **Lap Record Plugin** for SimHub automatically tracks and logs your personal best lap times across all your favourite racing simulators. It records detailed information about each of your best laps, allowing you to easily look back at your performance under varying conditions.
+The **Lap Record Plugin** for SimHub automatically tracks and logs your personal best lap times for each track and car combination.
+
+## Disclaimer
+Developed using Google Antigravity with Claude Sonnet 4.5 and Gemini Pro 3.1. The code has been human reviewed and tested and is safe to use. All files are available on this GitHub repository for you to confirm this. Use at your own risk. 
 
 ## Features
 
@@ -10,11 +13,21 @@ The **Lap Record Plugin** for SimHub automatically tracks and logs your personal
     *   Car class and specific car model
     *   Fuel level remaining
     *   Track temperature and track state (Dry, Intermediate, Wet)
-    *   Tyre compounds used on all four wheels
+    *   Tyre compounds used on all four wheels (See Limitations section below)
 *   **Custom Tyre Support:** Define custom tyre compounds with their own abbreviations and colours for easy viewing.
 *   **Game-Specific Overrides:** Some games report tyre data uniquely. The plugin allows you to set up per-game overrides to ensure your tyre information is captured correctly.
-*   **Car Name Aliasing:** Combine records from the same car if it's reported differently by the game (e.g., merging "Porsche 911 GT3 R" and "Porsche GT3").
+*   **Car Name Overrides:** Fix car naming where Game Data reports it incorrectly.
 *   **Backup & Restore:** Easily backup your lap records to a file to keep them safe, or share them between installations.
+
+## Limitations
+* This plugin was developed mostly using Le Mans Ultimate but has been checked with rFactor2 and Automobilista 2.
+* Other sims may not have all the features available due to the way they report telemetry data. 
+* Automatic tyre compounds is dependent on other plugins like NeoRed for LMU, SimHub does not natively have tyre compounds available that I could see!
+* Car names are reported to SimHub in different ways, you may want to use **Car Name Overrides** to display names correctly.
+** Example 'AM Valkryie Custom Team 2025' you might want to correct to 'Aston Martin Valkryie AMR-LMH'
+
+## Known Issues
+* Car Overrides list disappears on update, but somehow still works?
 
 ## Installation
 
@@ -41,10 +54,10 @@ If the game failed to accurately record the tyres you used on a lap, you can edi
 3.  Click anywhere else to save the changes.
 
 ### Customizing Tyres & Overrides
-At the bottom of the Lap Records page, you can access the configuration settings:
-*   **Custom Tyre Compounds:** Add or remove tyres and set their display colours.
+At the top of the Lap Records page, you can access the configuration settings:
 *   **Car Name Overrides:** Map one car name to another to combine their lap records.
-*   **Tyre Property Overrides:** If a specific game isn't automatically showing tyre data, you can specify the exact SimHub properties the plugin should look at for that game.
+*   **Custom Tyre Compounds:** Add or remove tyres and set their display colours.
+*   **Tyre Property Overrides:** If a specific game isn't automatically showing tyre data, you can specify the exact SimHub properties the plugin should look at for that game. (NeoRed plugin for LMU has this data)
 
 ## Data Backup
 It's highly recommended to periodically back up your lap times. 
