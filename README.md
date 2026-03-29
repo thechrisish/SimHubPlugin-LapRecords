@@ -41,12 +41,12 @@ This Readme IS human written, even if AI gave me a readable template to use. :sm
 * When properties of a recorded time are unknown could be displayed better.
 
 ## Race Sims Tested (Accurate as of 29th March 2026)
-:white_check_mark: Automobilista 2 - Track State data not available.
-:white_check_mark: EA Sports WRC - Class, Session, Fuel, Track Temp, Track State and Tyre data not available.
-:white_check_mark: Le Mans Ultimate - NeoRed plugin used to automatically populate tyre compounds.
-:white_check_mark: rFactor 2
-:x: Assetto Corsa Evo - No timing data in SimHub
-:x: Assetto Corsa Rally - No timing data in SimHub
+* :white_check_mark: Automobilista 2 - Track State data not available.
+* :white_check_mark: EA Sports WRC - Class, Session, Fuel, Track Temp, Track State and Tyre data not available.
+* :white_check_mark: Le Mans Ultimate - NeoRed plugin used to automatically populate tyre compounds.
+* :white_check_mark: rFactor 2
+* :x: Assetto Corsa Evo - No timing data in SimHub
+* :x: Assetto Corsa Rally - No timing data in SimHub
 
 ## Installation
 1.  Make sure SimHub is not running.
