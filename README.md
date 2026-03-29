@@ -52,7 +52,7 @@ This Readme IS human written, even if AI gave me a readable template to use. :sm
 1.  Make sure SimHub is not running.
 2.  Download the latest `SimHubLapRecordPlugin.dll` file.
 3.  Copy the `.dll` file into your SimHub installation directory. 
-    *   *By default, this is usually located at: `C:\Program Files (x86)\SimHub`*
+    *   *This is usually located in `C:\Program Files (x86)\SimHub`*
 4.  Start SimHub.
 5.  If prompted, click **Enable** to activate the Lap Record Plugin.
 
@@ -61,7 +61,7 @@ This Readme IS human written, even if AI gave me a readable template to use. :sm
 2.  Make sure SimHub is not running.
 3.  Download the latest `SimHubLapRecordPlugin.dll` file.
 4.  Copy the `.dll` file into your SimHub installation directory, overwriting the existing file.
-    *   *By default, this is usually located at: `C:\Program Files (x86)\SimHub`*
+    *   *This is usually located in `C:\Program Files (x86)\SimHub`*
 5.  Start SimHub.
 6.  If prompted, click **Enable** to activate the Lap Record Plugin.
 7.  (If no laptimes appear) In SimHub > Lap Records > Settings - Press the **Restore Lap Records...** button and select the backup file you saved in step 1.
