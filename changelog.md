@@ -2,10 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
-## [Unreleased] - 2026-03-28
+Changelog is written by Claude Sonnet and Gemini Pro.
+
+## [1.0.0] - 2026-03-28
 ### Added
 - Added a new `Settings` tab allowing column visibility customization and global tyre extraction parameters.
 - Implemented a dedicated section inside the Settings tab to add, remove, and manage custom tyre compounds. Users can now assign custom colors and acronym abbreviations to each compound locally and alter preexisting entries seamlessly.
@@ -26,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Blocked empty placeholder spacer rows from visually rendering inside the main laptime tracking table.
 - Disconnected the UI Default Tyres mapping mechanism from automatically appending inside JSON configurations directly, entirely fixing the bug mapping default sets redundantly across plugin re-initialization boots.
 
-## [1.0.7] - 2026-03-26
+## [0.0.8] - 2026-03-26
 ### Added
 - Created a top-level filtering layout resting above the Lap Records data table natively allowing records to be strictly filtered by `GameName` instances.
 - Added a new Auto-Filter toggle gracefully locking the data table specifically to whichever game engine SimHub natively detects on connection.
@@ -35,28 +36,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Reworked the `CELSIUS` parsing strings aggressively stripping all string artifacts beyond the core "C" and "F" formatters natively resolving legacy game integration errors.
 
-## [1.0.6] - 2026-03-26
+## [0.0.7] - 2026-03-26
 ### Fixed
 - Re-coded the Track Temperature format rendering. It now actively strips arbitrary lowercase degrees and explicitly builds proper, capitalized bounds depending purely on your active SimHub parameter settings (rendering strictly as `°C` or `°F`).
 
-## [1.0.5] - 2026-03-26
+## [0.0.6] - 2026-03-26
 ### Added
 - Inserted a brand new `Date` column mapping directly onto the native Lap Records table showcasing exactly when the record was achieved.
 - Added a `Remove` action button directly onto every row inside the Lap Records table, cleanly bypassing the need to edit the raw `JSON` configuration file to clear out bad laps.
 
-## [1.0.4] - 2026-03-26
+## [0.0.5] - 2026-03-26
 ### Added
 - Added a new bindable `DataGridComboBoxColumn` for "Track State" to directly support "Unknown", "Dry", "Intermediate", and "Wet" manual interventions inside the Lap Records data table.
 ### Changed
 - Removing a "Car Name Override" entry will now actively reverse and restore all affected records back to their original game-native tracking names natively.
 - Adjusted telemetry parsing for path wetness to trigger "Intermediate" bounds instead of the previous "Damp" mapping.
 
-## [1.0.3] - 2026-03-26
+## [0.0.4] - 2026-03-26
 ### Changed
 - Adding a new Car Name Override now natively retroactively applies to all previously recorded laps stored under the original game name in the main table. 
 - The Lap Records settings grid now dynamically pins the track you are currently driving on to the very top of the list for immediate access.
 
-## [1.0.2] - 2026-03-26
+## [0.0.3] - 2026-03-26
 ### Added
 - Replaced the generic Textboxes in the Settings UI with interactive, prepopulated ComboBoxes for both Track Tyres and Original Game Car Names.
 - Tyre compounds can now be directly altered via dropdown list inside the Lap Records data table.
@@ -65,7 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Integrated PC2/AMS2 `mAvgPathWetness` percentage tracking to establish true Track States internally.
 - Disabled direct compound index mapping algorithms in favor of manual verification/UI correction overrides.
 
-## [1.0.1] - 2026-03-26
+## [0.0.2] - 2026-03-26
 ### Fixed
 - Improved lap time validation reliability for games where `LapInvalidated` behaves inconsistently.
 - Fixed an issue where absent track state or tyre compound data could produce error states.
@@ -73,7 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a "Refresh Data" button to the Settings UI to allow updating the list manually.
 - Added detailed telemetry logging to `SimHub.log` for lap completion tracking.
 
-## [1.0.0] - 2026-03-26
+## [0.0.1] - 2026-03-26
 ### Added
 - Initial creation of the SimHub Lap Record Plugin.
 - Automatic logging of best lap times grouped by track and car.
