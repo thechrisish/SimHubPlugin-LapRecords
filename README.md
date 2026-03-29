@@ -81,7 +81,7 @@ If the game failed to record the tyres you used on a lap you can manually edit t
 2.  Type the abbreviation for the tyre compound you used (`S` for Soft, `M` for Medium etc).
 3.  Click anywhere else to save the changes.
 
-### Customizing Tyres & Overrides
+### Customising Tyres & Overrides
 At the top of the Lap Records page, you can access the configuration settings:
 *   **Car Name Overrides:** Map one car name to another to combine their lap records.
 *   **Custom Tyre Compounds:** Add or remove tyres and set their display colours.
