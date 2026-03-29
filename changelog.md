@@ -13,7 +13,8 @@ Changelog is written by Claude Sonnet and Gemini Pro.
 
 ### Changed
 - Scaled down the plugin's stopwatch icon by enclosing the geometry inside a transparent bounding box, ensuring visual parity with native SimHub side-menu icons.
-- Modified data injection and mapping loops across `Class`, `Session`, `Fuel Level`, `Track Temp`, and `Track State` columns to explicitly output correctly empty strings instead of default "Unknown" or zero placeholders when a game sim fails to provide targeted telemetry correctly.
+- Modified data injection and mapping loops across `Class`, `Session`, `Fuel Level`, and `Track Temp` columns to explicitly output correctly empty strings instead of default "Unknown" or zero placeholders when a game sim fails to provide targeted telemetry correctly.
+- *Note:* `Track State` retains its `"Unknown"` default string behavior to prevent WPF DataGridComboBoxColumn items mapping corruption across completely unpopulated historical cells.
 - Created robust legacy JSON data conversions safely translating old string flags back over to blank spaces locally upon data grid loading gracefully resolving data conflicts.
 
 ## [1.0.0] - 2026-03-28

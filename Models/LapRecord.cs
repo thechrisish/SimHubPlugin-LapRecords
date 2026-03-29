@@ -35,7 +35,7 @@ namespace SimHubLapRecordPlugin.Models
         private string _trackState;
         public string TrackState 
         { 
-            get => _trackState == "Unknown" ? "" : _trackState;
+            get => string.IsNullOrWhiteSpace(_trackState) ? "Unknown" : _trackState;
             set => _trackState = value;
         }
         public double FuelLevel { get; set; } = 0.0;

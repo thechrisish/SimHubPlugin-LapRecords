@@ -203,7 +203,6 @@ namespace SimHubLapRecordPlugin
                         if (unitMode.Length > 1) unitMode = unitMode.Substring(0, 1).ToUpper();
                         string trackTempStr = roadTemp != 0 ? $"{roadTemp:F1}°{unitMode}" : "";
 
-                        string gameName = data.GameName ?? "Unknown";
                         if (!Settings.GameTyreOverrides.TryGetValue(gameName, out var gameOverride))
                             gameOverride = new GameTyreOverride();
 
@@ -227,7 +226,7 @@ namespace SimHubLapRecordPlugin
                             : $"{fl}/{fr}/{rl}/{rr}";
 
                         var    wetnessObj    = pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.Data.mAvgPathWetness");
-                        string trackStateStr = "";
+                        string trackStateStr = "Unknown";
                         if (wetnessObj != null && double.TryParse(wetnessObj.ToString(), out double wetness))
                             trackStateStr = wetness == 0 ? "Dry" : (wetness < 0.3 ? "Intermediate" : "Wet");
 
