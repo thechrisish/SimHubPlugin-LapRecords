@@ -49,22 +49,24 @@ This Readme IS human written, even if AI gave me a readable template to use. :sm
 * :x: Assetto Corsa Rally - No timing data in SimHub
 
 ## Installation
-1.  Make sure SimHub is not running.
-2.  Download the latest `SimHubLapRecordPlugin.dll` file.
-3.  Copy the `.dll` file into your SimHub installation directory. 
-    *   *This is usually located in `C:\Program Files (x86)\SimHub`*
-4.  Start SimHub.
-5.  If prompted, click **Enable** to activate the Lap Record Plugin.
-
-## Update
-1.  In SimHub > Lap Records > Settings - Press the **Backup Lap Records...** button and save the file somewhere safe.
+1.  Download the `SimHubLapRecordPlugin.dll` from the [releases](https://github.com/thechrisish/SimHubPlugin-LapRecords/releases) page. 
 2.  Make sure SimHub is not running.
 3.  Download the latest `SimHubLapRecordPlugin.dll` file.
-4.  Copy the `.dll` file into your SimHub installation directory, overwriting the existing file.
+4.  Copy the `.dll` file into your SimHub installation directory. 
     *   *This is usually located in `C:\Program Files (x86)\SimHub`*
 5.  Start SimHub.
 6.  If prompted, click **Enable** to activate the Lap Record Plugin.
-7.  (If no laptimes appear) In SimHub > Lap Records > Settings - Press the **Restore Lap Records...** button and select the backup file you saved in step 1.
+
+## Update
+1.  Download the `SimHubLapRecordPlugin.dll` from the [releases](https://github.com/thechrisish/SimHubPlugin-LapRecords/releases) page. 
+2.  In SimHub > Lap Records > Settings - Press the **Backup Lap Records...** button and save the file somewhere safe.
+3.  Make sure SimHub is not running.
+4.  Download the latest `SimHubLapRecordPlugin.dll` file.
+5.  Copy the `.dll` file into your SimHub installation directory, overwriting the existing file.
+    *   *This is usually located in `C:\Program Files (x86)\SimHub`*
+6.  Start SimHub.
+7.  If prompted, click **Enable** to activate the Lap Record Plugin.
+8.  (If no laptimes appear) In SimHub > Lap Records > Settings - Press the **Restore Lap Records...** button and select the backup file you saved in step 1.
 
 ## Usage
 Once installed and enabled, a new **Lap Records** menu item will appear in the left-hand navigation bar of SimHub (look for the white stopwatch icon). 
