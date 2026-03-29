@@ -6,21 +6,43 @@ namespace SimHubLapRecordPlugin.Models
     {
         public string GameName { get; set; } = "Unknown";
         public string CarName { get; set; }
-        public string CarClass { get; set; }
-        public string Session { get; set; }
+        private string _carClass;
+        public string CarClass 
+        { 
+            get => _carClass == "Unknown" ? "" : _carClass;
+            set => _carClass = value;
+        }
+
+        private string _session;
+        public string Session 
+        { 
+            get => _session == "Unknown" ? "" : _session;
+            set => _session = value;
+        }
         public TimeSpan LapTime { get; set; }
         public string TyreCompound { get; set; }
         public string TyreCompoundFL { get; set; }
         public string TyreCompoundFR { get; set; }
         public string TyreCompoundRL { get; set; }
         public string TyreCompoundRR { get; set; }
-        public string TrackTemperature { get; set; }
-        public string TrackState { get; set; }
+        private string _trackTemperature;
+        public string TrackTemperature 
+        { 
+            get => _trackTemperature == "0.0°C" || _trackTemperature == "0.0°F" || _trackTemperature == "Unknown" ? "" : _trackTemperature;
+            set => _trackTemperature = value;
+        }
+
+        private string _trackState;
+        public string TrackState 
+        { 
+            get => string.IsNullOrWhiteSpace(_trackState) ? "Unknown" : _trackState;
+            set => _trackState = value;
+        }
         public double FuelLevel { get; set; } = 0.0;
         public string FuelUnit { get; set; } = "L";
         public DateTime RecordDate { get; set; } = DateTime.Now;
 
         [Newtonsoft.Json.JsonIgnore]
-        public string DisplayFuel => $"{FuelLevel:F1} {FuelUnit}";
+        public string DisplayFuel => FuelLevel > 0 ? $"{FuelLevel:F1} {FuelUnit}" : "";
     }
 }

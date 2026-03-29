@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 Changelog is written by Claude Sonnet and Gemini Pro.
 
+## [1.0.1] - 2026-03-29
+### Added
+- Expanded SimHub property endpoints extensively. The plugin now natively exposes `TrackState`, `TrackTemp`, `TyreFL`, `TyreFR`, `TyreRL`, `TyreRR`, and `Fuel` properties dynamically bound into the `CurrentCarBestLap` dataset.
+- Added a brand new, fully populated `CurrentClassBestLap` property tree replicating the entire parameter set. It dynamically scans and tracks the absolute best lap time across all cars specifically matching your current car's Class designation locally.
+
+### Changed
+- Scaled down the plugin's stopwatch icon by enclosing the geometry inside a transparent bounding box, ensuring visual parity with native SimHub side-menu icons.
+- Modified data injection and mapping loops across `Class`, `Session`, `Fuel Level`, and `Track Temp` columns to explicitly output correctly empty strings instead of default "Unknown" or zero placeholders when a game sim fails to provide targeted telemetry correctly.
+- *Note:* `Track State` retains its `"Unknown"` default string behavior to prevent WPF DataGridComboBoxColumn items mapping corruption across completely unpopulated historical cells.
+- Created robust legacy JSON data conversions safely translating old string flags back over to blank spaces locally upon data grid loading gracefully resolving data conflicts.
+
 ## [1.0.0] - 2026-03-28
 ### Added
 - Added a new `Settings` tab allowing column visibility customization and global tyre extraction parameters.
