@@ -19,7 +19,7 @@
             <system:String>Unknown</system:String>
         </x:Array>
         <x:Array x:Key="TrackStateOptions" Type="system:String">
-            <system:String>Unknown</system:String>
+            <system:String></system:String>
             <system:String>Dry</system:String>
             <system:String>Intermediate</system:String>
             <system:String>Wet</system:String>
