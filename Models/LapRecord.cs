@@ -42,6 +42,18 @@ namespace SimHubLapRecordPlugin.Models
         public string FuelUnit { get; set; } = "L";
         public DateTime RecordDate { get; set; } = DateTime.Now;
 
+        /// <summary>
+        /// The raw car name as reported by the sim, before any CarNameOverride is applied.
+        /// Set once on record creation; never modified by override logic.
+        /// </summary>
+        public string OriginalCarName { get; set; }
+
+        /// <summary>
+        /// The raw track name as reported by the sim, before any TrackNameOverride is applied.
+        /// Set once on record creation; never modified by merge logic.
+        /// </summary>
+        public string OriginalTrackName { get; set; }
+
         [Newtonsoft.Json.JsonIgnore]
         public string DisplayFuel => FuelLevel > 0 ? $"{FuelLevel:F1} {FuelUnit}" : "";
     }

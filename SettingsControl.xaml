@@ -176,6 +176,40 @@
                     </DataGrid>
                 </Grid>
             </TabItem>
+            <TabItem Header="Track Overrides">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Margin="5,8,5,4" TextWrapping="Wrap" FontStyle="Italic"
+                               Text="Map a raw sim track name to a unified display name so laps from different sims (e.g. ACC and LMU) count toward the same record."/>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5,4,5,8">
+                        <TextBlock Text="Sim Track Name:" VerticalAlignment="Center" Margin="0,0,5,0" />
+                        <ComboBox Name="NewOriginalTrackNameCombo" Width="180" Margin="0,0,10,0" IsEditable="True" />
+                        <TextBlock Text="Unified Name:" VerticalAlignment="Center" Margin="0,0,5,0" />
+                        <TextBox Name="NewUnifiedTrackName" Width="150" Margin="0,0,10,0" />
+                        <Button Content="Add Override" Click="AddTrackOverride_Click" Padding="10,5" />
+                    </StackPanel>
+
+                    <DataGrid Grid.Row="2" Name="TrackOverridesGrid" AutoGenerateColumns="False" CanUserAddRows="False" Margin="5" CellEditEnding="TrackOverridesGrid_CellEditEnding">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Sim Track Name" Binding="{Binding OriginalTrackName}" IsReadOnly="True" Width="*" />
+                            <DataGridTextColumn Header="Unified Name" Binding="{Binding UnifiedName}" Width="*" />
+                            <DataGridTemplateColumn Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Remove" Click="RemoveTrackOverride_Click" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
             <TabItem Header="Settings">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="10">
@@ -248,8 +282,8 @@
 
                         <GroupBox Header="Data Management" Margin="0,0,0,10">
                             <StackPanel Orientation="Horizontal" Margin="5">
-                                <Button Content="Backup Lap Records..." Click="BackupRecords_Click" Padding="15,5" Margin="0,0,10,0"/>
-                                <Button Content="Restore Lap Records..." Click="RestoreRecords_Click" Padding="15,5" />
+                                <Button Content="Backup All Settings..." Click="BackupRecords_Click" Padding="15,5" Margin="0,0,10,0"/>
+                                <Button Content="Restore All Settings..." Click="RestoreRecords_Click" Padding="15,5" />
                             </StackPanel>
                         </GroupBox>
                     </StackPanel>

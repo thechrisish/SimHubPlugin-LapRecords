@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 Changelog is written by Claude Sonnet and Gemini Pro.
 
+## [1.1.0] - 2026-04-02
+### Added
+- **Track Name Overrides** — new "Track Overrides" tab with Add/Remove/inline-edit support. Map any raw sim track string (e.g. `monza_2024`) to a unified display name (e.g. `Monza`). Laps from multiple sims that share a unified name are stored in the same bucket, enabling true cross-sim records.
+- `OriginalCarName` and `OriginalTrackName` fields added to `LapRecord`. Set once at record creation to capture the raw sim values before any override is applied. Existing records are retroactively stamped when an override is first added.
+- `TrackNameOverrides` dictionary added to `Settings` for track merge persistence.
+
+### Changed
+- **Car Override unmerging** now uses `OriginalCarName` to identify which records belong to a specific override entry. Removing override "Car A" when "Car A" and "Car B" are both stored under the same unified name no longer incorrectly moves "Car B" laps.
+- **Backup/Restore** now saves and restores the entire `Settings` object (lap records, car overrides, track overrides, tyre compound definitions, tyre property mappings, column visibility) in a single file. Legacy backups containing only lap records are still detected and restored correctly.
+- Backup filename changed from `SimHub_LapRecords_*` to `SimHub_LapRecordPlugin_Backup_*` to reflect the broader scope.
+- "Backup Lap Records" and "Restore Lap Records" buttons renamed to "Backup All Settings" and "Restore All Settings".
+
 ## [1.0.1] - 2026-03-29
 ### Added
 - Expanded SimHub property endpoints extensively. The plugin now natively exposes `TrackState`, `TrackTemp`, `TyreFL`, `TyreFR`, `TyreRL`, `TyreRR`, and `Fuel` properties dynamically bound into the `CurrentCarBestLap` dataset.

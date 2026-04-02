@@ -101,8 +101,14 @@ namespace SimHubLapRecordPlugin
             string gameName  = data.GameName ?? "Unknown";
             string carClass  = !string.IsNullOrWhiteSpace(data.NewData.CarClass) ? data.NewData.CarClass : "";
 
+            string rawCarName = carName;
             if (Settings.CarNameOverrides.TryGetValue(carName, out var overridden) && !string.IsNullOrWhiteSpace(overridden))
                 carName = overridden;
+
+            // Apply track name override (merge multiple sim track strings to one unified key)
+            string rawTrackName = trackName;
+            if (Settings.TrackNameOverrides.TryGetValue(trackName, out var overriddenTrack) && !string.IsNullOrWhiteSpace(overriddenTrack))
+                trackName = overriddenTrack;
 
             if (trackName != _lastTrackName || carName != _lastCarName || gameName != _lastGameName || carClass != _lastCarClass)
             {
@@ -232,21 +238,23 @@ namespace SimHubLapRecordPlugin
 
                         Settings.TrackRecords[trackName][carName] = new LapRecord
                         {
-                            GameName         = gameName,
-                            CarName          = carName,
-                            CarClass         = !string.IsNullOrWhiteSpace(data.NewData.CarClass) ? data.NewData.CarClass : "",
-                            Session          = !string.IsNullOrWhiteSpace(data.NewData.SessionTypeName) ? data.NewData.SessionTypeName : "",
-                            LapTime          = lastLapTime,
-                            FuelLevel        = data.NewData.Fuel > 0 ? data.NewData.Fuel : 0.0,
-                            FuelUnit         = pluginManager.GetPropertyValue("DataCorePlugin.GameData.FuelUnit")?.ToString() ?? "L",
-                            TyreCompound     = tyreCompStr,
-                            TyreCompoundFL   = fl,
-                            TyreCompoundFR   = fr,
-                            TyreCompoundRL   = rl,
-                            TyreCompoundRR   = rr,
-                            TrackTemperature = trackTempStr,
-                            TrackState       = trackStateStr,
-                            RecordDate       = DateTime.Now
+                            GameName          = gameName,
+                            CarName           = carName,
+                            OriginalCarName   = rawCarName,
+                            OriginalTrackName = rawTrackName,
+                            CarClass          = !string.IsNullOrWhiteSpace(data.NewData.CarClass) ? data.NewData.CarClass : "",
+                            Session           = !string.IsNullOrWhiteSpace(data.NewData.SessionTypeName) ? data.NewData.SessionTypeName : "",
+                            LapTime           = lastLapTime,
+                            FuelLevel         = data.NewData.Fuel > 0 ? data.NewData.Fuel : 0.0,
+                            FuelUnit          = pluginManager.GetPropertyValue("DataCorePlugin.GameData.FuelUnit")?.ToString() ?? "L",
+                            TyreCompound      = tyreCompStr,
+                            TyreCompoundFL    = fl,
+                            TyreCompoundFR    = fr,
+                            TyreCompoundRL    = rl,
+                            TyreCompoundRR    = rr,
+                            TrackTemperature  = trackTempStr,
+                            TrackState        = trackStateStr,
+                            RecordDate        = DateTime.Now
                         };
 
                         SaveSettings();
