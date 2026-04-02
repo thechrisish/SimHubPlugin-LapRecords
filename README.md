@@ -1,5 +1,3 @@
-<img width="1676" height="1379" alt="image" src="https://github.com/user-attachments/assets/6d7e3e7d-c3eb-4b90-9e3e-5c36ac3cd3dc" /># SimHub Lap Record Plugin
-
 The **Lap Record Plugin** for SimHub automatically tracks and logs your personal best lap times for each car and track combination.
 
 ## Disclaimer
@@ -9,6 +7,8 @@ The reason for using Claude and Gemini is because I need to learn it - my job is
 I can read and understand C# code, but I'm no good at writing it. Terraform, Ansible and Bash scripts are more my thing... With that in mind I'm more than happy for anyone to tear this apart and suggest where it can be improved.
 
 This Readme IS human written, even if AI gave me a readable template to use. :smile:
+
+<img width="1676" height="1379" alt="image" src="https://github.com/user-attachments/assets/06ec4d6d-7ffa-42f0-a6a1-ecbb581ac610" />
 
 ## Features
 *   **Automatic Lap Logging:** Automatically records your Best lap times for every car and track combination in supported sims.
@@ -31,15 +31,15 @@ This Readme IS human written, even if AI gave me a readable template to use. :sm
 * This plugin was developed mostly using Le Mans Ultimate but has been checked with most of the sims I own (see list below).
 * Other sims may not have all the features available due to the way they report telemetry data. 
 * Automatic tyre compounds is dependent on other plugins like NeoRed for LMU, SimHub does not natively have tyre compounds available that I could see!
-* Car names are reported to SimHub in different ways, you may want to use **Car Name Overrides** to display names correctly.
+* Car and track names are reported to SimHub in different ways, you may want to use **Car Name Overrides** and **Track Name Overrides** to display names correctly.
 ** Example 'AM Valkryie Custom Team 2025' you might want to correct to 'Aston Martin Valkryie AMR-LMH'
 
 ## Known Issues
-* Car Overrides list disappears on update, but somehow still works...?
+* -Car Overrides list disappears on update, but somehow still works...?- (Fixed in 1.1.0)
 * Tyre compound assignment overrides are a little fiddly.
 * When a laptime is updated the screen doesn't automatically refresh.
-* Different sims name different tracks differently... I may add a future improvement to allow merging of tracks in the list.
-* When properties of a recorded time are unknown could be displayed better.
+* -Different sims name different tracks differently... I may add a future improvement to allow merging of tracks in the list.- Added in 1.1.0
+* When properties of a recorded time are unknown, they could be displayed better.
 
 ## Race Sims Tested (Accurate as of 29th March 2026)
 * :white_check_mark: Automobilista 2 - Track State data not available.
@@ -94,5 +94,3 @@ At the top of the Lap Records page, you can access the configuration settings:
 It's highly recommended to periodically back up your lap times, especially during updates. 
 *   Click **Backup Records** at the bottom of the page to save all your data to a JSON file.
 *   Use **Restore Records** to load a previously saved backup file. *Warning: Restoring will overwrite any currently stored laps!*
-
-<img width="1676" height="1379" alt="image" src="https://github.com/user-attachments/assets/06ec4d6d-7ffa-42f0-a6a1-ecbb581ac610" />
