@@ -35,10 +35,10 @@ This Readme IS human written, even if AI gave me a readable template to use. :sm
 ** Example 'AM Valkryie Custom Team 2025' you might want to correct to 'Aston Martin Valkryie AMR-LMH'
 
 ## Known Issues
-* -Car Overrides list disappears on update, but somehow still works...?- (Fixed in 1.1.0)
+* ~~Car Overrides list disappears on update, but somehow still works...?~~ (Fixed in 1.1.0)
 * Tyre compound assignment overrides are a little fiddly.
 * When a laptime is updated the screen doesn't automatically refresh.
-* -Different sims name different tracks differently... I may add a future improvement to allow merging of tracks in the list.- Added in 1.1.0
+* ~~Different sims name different tracks differently... I may add a future improvement to allow merging of tracks in the list.~~ Added in 1.1.0
 * When properties of a recorded time are unknown, they could be displayed better.
 
 ## Race Sims Tested (Accurate as of 29th March 2026)
