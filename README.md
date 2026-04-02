@@ -1,4 +1,4 @@
-# SimHub Lap Record Plugin
+<img width="1676" height="1379" alt="image" src="https://github.com/user-attachments/assets/6d7e3e7d-c3eb-4b90-9e3e-5c36ac3cd3dc" /># SimHub Lap Record Plugin
 
 The **Lap Record Plugin** for SimHub automatically tracks and logs your personal best lap times for each car and track combination.
 
@@ -94,3 +94,5 @@ At the top of the Lap Records page, you can access the configuration settings:
 It's highly recommended to periodically back up your lap times, especially during updates. 
 *   Click **Backup Records** at the bottom of the page to save all your data to a JSON file.
 *   Use **Restore Records** to load a previously saved backup file. *Warning: Restoring will overwrite any currently stored laps!*
+
+<img width="1676" height="1379" alt="image" src="https://github.com/user-attachments/assets/06ec4d6d-7ffa-42f0-a6a1-ecbb581ac610" />
