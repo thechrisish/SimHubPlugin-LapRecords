@@ -24,7 +24,8 @@ This Readme IS human written, even if AI gave me a readable template to use. :sm
 *   **Custom Tyre Support:** Define custom tyre compounds with their own abbreviations and colours for easy viewing.
 *   **Game-Specific Overrides:** Some games report tyre data differently, the plugin allows you to set up per-game overrides to ensure your tyre information is captured correctly.
 *   **Car Name Overrides:** Fix car naming where Game Data reports it incorrectly.
-*   **Backup & Restore:** Easily backup your lap records to a file to keep them safe, or share them between installations. During my development a change wiped all my laptimes!
+*   **Track Name Overrides** (From 1.1.0) Override track names so you don't have every sim's interpretation of how they name Monza GP.
+*   **Backup & Restore:** Easily backup your lap records and settings to a file to keep them safe. During my development a change wiped all my laptimes - you have been warned!
 
 ## Limitations
 * This plugin was developed mostly using Le Mans Ultimate but has been checked with most of the sims I own (see list below).
