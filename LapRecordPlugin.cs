@@ -16,6 +16,9 @@ namespace SimHubLapRecordPlugin
         public PluginManager PluginManager { get; set; }
         public Settings Settings;
 
+        /// <summary>Raised on the game thread when a new personal best is saved.</summary>
+        public event EventHandler LapRecordUpdated;
+
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(typeof(LapRecordPlugin));
 
         // Per-frame caching to avoid redundant string allocations (3.3)
@@ -43,16 +46,41 @@ namespace SimHubLapRecordPlugin
             // 1.1: Use SimHub's native settings persistence (IPlugin extension method)
             Settings = this.ReadCommonSettings<Settings>("Settings", () => new Settings());
 
-            if (Settings.TyreCompoundDefinitions == null || Settings.TyreCompoundDefinitions.Count == 0)
+            if (Settings.TyreCompoundDefinitions == null)
+                Settings.TyreCompoundDefinitions = new System.Collections.ObjectModel.ObservableCollection<TyreCompoundDef>();
+
+            // Default compound catalogue — new entries added here are auto-merged on boot
+            var defaultCompounds = new[]
             {
-                Settings.TyreCompoundDefinitions = new System.Collections.ObjectModel.ObservableCollection<TyreCompoundDef>
-                {
-                    new TyreCompoundDef { Name = "Soft",         Abbreviation = "S",  BackgroundColor = "White"  },
-                    new TyreCompoundDef { Name = "Medium",       Abbreviation = "M",  BackgroundColor = "Yellow" },
-                    new TyreCompoundDef { Name = "Hard",         Abbreviation = "H",  BackgroundColor = "Red"    },
-                    new TyreCompoundDef { Name = "Intermediate", Abbreviation = "I",  BackgroundColor = "Green"  },
-                    new TyreCompoundDef { Name = "Wet",          Abbreviation = "W",  BackgroundColor = "Blue"   }
-                };
+                new TyreCompoundDef { Name = "Soft",          Abbreviation = "S",   BackgroundColor = "White"       },
+                new TyreCompoundDef { Name = "Medium",        Abbreviation = "M",   BackgroundColor = "Yellow"      },
+                new TyreCompoundDef { Name = "Hard",          Abbreviation = "H",   BackgroundColor = "Red"         },
+                new TyreCompoundDef { Name = "Intermediate",  Abbreviation = "I",   BackgroundColor = "Green"       },
+                new TyreCompoundDef { Name = "Wet",           Abbreviation = "W",   BackgroundColor = "Blue"        },
+                new TyreCompoundDef { Name = "Speedway",      Abbreviation = "SPD", BackgroundColor = "Orange"      },
+                new TyreCompoundDef { Name = "Primary",       Abbreviation = "PRI", BackgroundColor = "LightGray"   },
+                new TyreCompoundDef { Name = "Alternate",     Abbreviation = "ALT", BackgroundColor = "Khaki"       },
+                new TyreCompoundDef { Name = "Extreme Wet",   Abbreviation = "XW",  BackgroundColor = "DarkBlue"    },
+                new TyreCompoundDef { Name = "Vintage",       Abbreviation = "VIN", BackgroundColor = "SaddleBrown" },
+                new TyreCompoundDef { Name = "Street",        Abbreviation = "STR", BackgroundColor = "DimGray"     },
+                new TyreCompoundDef { Name = "All-Weather",   Abbreviation = "AW",  BackgroundColor = "Teal"        },
+                new TyreCompoundDef { Name = "Semi-Slick",    Abbreviation = "SMS", BackgroundColor = "Purple"      },
+                new TyreCompoundDef { Name = "Dry",           Abbreviation = "DRY", BackgroundColor = "Tan"         },
+                new TyreCompoundDef { Name = "Gravel Soft",   Abbreviation = "GrS", BackgroundColor = "#C4A882"     },
+                new TyreCompoundDef { Name = "Gravel Medium", Abbreviation = "GrM", BackgroundColor = "#A0875A"     },
+                new TyreCompoundDef { Name = "Gravel Hard",   Abbreviation = "GrH", BackgroundColor = "#7D6840"     },
+                new TyreCompoundDef { Name = "Tarmac Soft",   Abbreviation = "TaS", BackgroundColor = "#D0D0D0"     },
+                new TyreCompoundDef { Name = "Tarmac Medium", Abbreviation = "TaM", BackgroundColor = "#A0A0A0"     },
+                new TyreCompoundDef { Name = "Tarmac Hard",   Abbreviation = "TaH", BackgroundColor = "#707070"     },
+                new TyreCompoundDef { Name = "Snow",          Abbreviation = "SNW", BackgroundColor = "AliceBlue"   },
+                new TyreCompoundDef { Name = "Winter",        Abbreviation = "WNT", BackgroundColor = "LightCyan"   }
+            };
+
+            // Auto-merge: append any default compounds not already present (matched by Name)
+            foreach (var def in defaultCompounds)
+            {
+                if (!Settings.TyreCompoundDefinitions.Any(c => string.Equals(c.Name, def.Name, StringComparison.OrdinalIgnoreCase)))
+                    Settings.TyreCompoundDefinitions.Add(def);
             }
 
             pluginManager.AddProperty("CurrentCarBestLap", this.GetType(), "-");
@@ -212,20 +240,42 @@ namespace SimHubLapRecordPlugin
                         if (!Settings.GameTyreOverrides.TryGetValue(gameName, out var gameOverride))
                             gameOverride = new GameTyreOverride();
 
-                        string GetTyreVal(string overrideProp, string defaultProp)
+                        // Resolve game-specific fallback tyre properties
+                        string fallbackFL = null, fallbackFR = null, fallbackRL = null, fallbackRR = null;
+                        if (gameName == "LeMansUltimate" || gameName == "LMU")
+                        {
+                            fallbackFL = "LMU_NeoRedPlugin.Tyre.FL_TyreCompound_Name";
+                            fallbackFR = "LMU_NeoRedPlugin.Tyre.FR_TyreCompound_Name";
+                            fallbackRL = "LMU_NeoRedPlugin.Tyre.RL_TyreCompound_Name";
+                            fallbackRR = "LMU_NeoRedPlugin.Tyre.RR_TyreCompound_Name";
+                        }
+                        else if (gameName == "Automobilista2")
+                        {
+                            fallbackFL = "DataCorePlugin.GameRawData.mTyreCompound01.value";
+                            fallbackFR = "DataCorePlugin.GameRawData.mTyreCompound02.value";
+                            fallbackRL = "DataCorePlugin.GameRawData.mTyreCompound03.value";
+                            fallbackRR = "DataCorePlugin.GameRawData.mTyreCompound04.value";
+                        }
+
+                        string GetTyreVal(string overrideProp, string defaultProp, string fallbackProp)
                         {
                             if (!string.IsNullOrWhiteSpace(overrideProp))
                             {
                                 var val = pluginManager.GetPropertyValue(overrideProp)?.ToString();
                                 if (!string.IsNullOrWhiteSpace(val)) return val;
                             }
+                            if (!string.IsNullOrWhiteSpace(fallbackProp))
+                            {
+                                var val = pluginManager.GetPropertyValue(fallbackProp)?.ToString();
+                                if (!string.IsNullOrWhiteSpace(val)) return val;
+                            }
                             return pluginManager.GetPropertyValue(defaultProp)?.ToString() ?? "Unknown";
                         }
 
-                        string fl = GetTyreVal(gameOverride.OverrideFL, "DataCorePlugin.GameData.TyreCompoundFrontLeft");
-                        string fr = GetTyreVal(gameOverride.OverrideFR, "DataCorePlugin.GameData.TyreCompoundFrontRight");
-                        string rl = GetTyreVal(gameOverride.OverrideRL, "DataCorePlugin.GameData.TyreCompoundRearLeft");
-                        string rr = GetTyreVal(gameOverride.OverrideRR, "DataCorePlugin.GameData.TyreCompoundRearRight");
+                        string fl = GetTyreVal(gameOverride.OverrideFL, "DataCorePlugin.GameData.TyreCompoundFrontLeft", fallbackFL);
+                        string fr = GetTyreVal(gameOverride.OverrideFR, "DataCorePlugin.GameData.TyreCompoundFrontRight", fallbackFR);
+                        string rl = GetTyreVal(gameOverride.OverrideRL, "DataCorePlugin.GameData.TyreCompoundRearLeft", fallbackRL);
+                        string rr = GetTyreVal(gameOverride.OverrideRR, "DataCorePlugin.GameData.TyreCompoundRearRight", fallbackRR);
 
                         string tyreCompStr = (fl == fr && fl == rl && fl == rr && fl != "Unknown")
                             ? fl
@@ -258,6 +308,7 @@ namespace SimHubLapRecordPlugin
                         };
 
                         SaveSettings();
+                        LapRecordUpdated?.Invoke(this, EventArgs.Empty);
 
                         // Invalidate key cache so exported properties refresh next frame
                         _lastTrackName = null;

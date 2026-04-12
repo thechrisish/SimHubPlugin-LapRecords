@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 Changelog is written by Claude Sonnet and Gemini Pro.
 
+## [1.2.0] - 2026-04-12
+### Added
+- **LMU Tyre Properties Integration** — automatically detects and falls back to use the NeoRed plugin's properties for Le Mans Ultimate (LMU) if it is installed, fetching reliable data for all 4 tyre compounds without requiring manual override configuration.
+- **AMS2 Tyre Compound Integration** — automatically reads tyre compound names from Automobilista 2's raw data properties (`mTyreCompound01`–`04`), providing accurate compound identification across all AMS2 tyre categories.
+- Added 17 new default tyre compound categories spanning across Automobilista 2 and EA Sports WRC, natively mapping slick, wet, treaded, and dirt configurations with their own individual naming abbreviations and color mapping.
+- Added a helpful direct hyperlink to the LMU NeoRed plugin threads alongside the Tyre Property Overrides section inside the settings window.
+- **Auto-Refresh** — the lap records data table now automatically refreshes in real-time immediately when a new personal best lap time is posted, resolving the need to manually click the "Refresh Data" button.
+- **Expand / Collapse All** — added toolbar buttons on the Lap Records tab to expand or collapse all track groups at once.
+
+### Changed
+- Refactored tyre compound retrieval into a game-agnostic fallback architecture. Game-specific fallback properties are resolved upfront and passed cleanly into `GetTyreVal`, making it trivial to add support for additional games.
+- Default tyre compound definitions are now auto-merged on plugin boot. Any new compounds added to the default catalogue in future updates will automatically appear in the user's list without overwriting existing customizations.
+
 ## [1.1.0] - 2026-04-02
 ### Added
 - **Track Name Overrides** — new "Track Overrides" tab with Add/Remove/inline-edit support. Map any raw sim track string (e.g. `monza_2024`) to a unified display name (e.g. `Monza`). Laps from multiple sims that share a unified name are stored in the same bucket, enabling true cross-sim records.
