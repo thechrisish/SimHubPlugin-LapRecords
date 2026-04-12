@@ -21,10 +21,10 @@ This Readme IS human written, even if AI gave me a readable template to use. :sm
     *   Track temperature
     *   Track state (Dry, Intermediate, Wet)
     *   Tyre compounds used on all four wheels (See Limitations section below)
-*   **Custom Tyre Support:** Define custom tyre compounds with their own abbreviations and colours for easy viewing. The plugin automatically populates 22 defaults.
+*   **Custom Tyre Support:** Define custom tyre compounds with their own abbreviations and colours for easy viewing. Lots of tyres included by default!
 *   **Game-Specific Overrides:** Some games report tyre data differently, the plugin allows you to set up per-game overrides or natively falls back to specific properties (e.g. NeoRed for LMU).
-*   **Car Name Overrides:** Fix car naming where Game Data reports it incorrectly and unify records.
-*   **Track Name Overrides:** Map raw sim track strings (e.g. `monza_2024`) to unified names (e.g. `Monza`) to securely merge lap records driven across multiple simulators under one track.
+*   **Car Name Overrides:** Fix car naming where Game Data reports it incorrectly.
+*   **Track Name Overrides:** Map raw track strings (e.g. `monza_2024`) to something more generic (e.g. `Monza`) to merge records made in differnet sims under the same track name.
 *   **Backup & Restore:** Easily backup all plugin settings, overrides, custom tyres, and lap records to a single file to keep them safe, or share them between installations.
 
 ## Limitations
@@ -81,12 +81,14 @@ If the game failed to record the tyres you used on a lap you can manually edit t
 
 ### Customizing Tyres & Overrides
 At the top of the Lap Records page, you can access the configuration settings tabs:
-*   **Car Overrides:** Map one car name to another to combine their lap records.
-*   **Track Overrides:** Map raw sim track strings to a unified track name so they share a leaderboard.
+*   **Car Overrides:** Map one car name to another to combine their lap records. (Useful where SimHub reports a team name rather than a car name)
+*   **Track Overrides:** Map raw sim track strings to a unified track name so they share a leaderboard. (Useful where a track is reported with different names in different sims)
 *   **Settings > Custom Tyre Compounds:** Add or remove tyres and set their display colours.
-*   **Settings > Tyre Property Overrides:** If a specific game isn't automatically showing tyre data, you can specify the exact SimHub properties the plugin should look at for that game. (Note: LMU natively hooks into the NeoRed plugin implicitly, and AMS2 pulls natively).
+*   **Settings > Tyre Property Overrides:** If a specific game isn't automatically showing tyre data, you can specify the exact SimHub properties the plugin should look at for that game. Games configured so far:
+    *   LMU via NeoRed plugin 
+    *   AMS2 has data natively in SimHub
 
 ## Data Backup
 It's highly recommended to periodically back up your lap times, especially during updates. 
-*   Click **Backup Records** at the bottom of the page to save all your data to a JSON file.
-*   Use **Restore Records** to load a previously saved backup file. *Warning: Restoring will overwrite any currently stored laps!*
+*   Click **Backup All Settings...** at the bottom of the page to save all your data to a JSON file.
+*   Use **Restore All Settings...** to load a previously saved backup file. *Warning: Restoring will overwrite any currently stored data!*
