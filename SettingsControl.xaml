@@ -48,13 +48,15 @@
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBlock Text="Filter by Game:" VerticalAlignment="Center" Margin="0,0,5,0" />
                         <ComboBox Name="GameFilterCombo" Width="150" Margin="0,0,10,0" SelectionChanged="GameFilterCombo_SelectionChanged" />
-                        <CheckBox Name="AutoFilterCheckbox" Content="Auto-Filter to Current Game" VerticalAlignment="Center" Checked="AutoFilterCheckbox_Changed" Unchecked="AutoFilterCheckbox_Changed" />
+                        <CheckBox Name="AutoFilterCheckbox" Content="Auto-Filter to Current Game" VerticalAlignment="Center" Checked="AutoFilterCheckbox_Changed" Unchecked="AutoFilterCheckbox_Changed" Margin="0,0,10,0" />
+                        <Button Content="Expand All" Click="ExpandAll_Click" Padding="10,2" Margin="0,0,5,0" />
+                        <Button Content="Collapse All" Click="CollapseAll_Click" Padding="10,2" />
                     </StackPanel>
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                         <ItemsControl Name="TrackItemsControl">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Expander Header="{Binding TrackName}" IsExpanded="True" Margin="5">
+                                    <Expander Header="{Binding TrackName}" IsExpanded="{Binding IsExpanded, Mode=TwoWay}" Margin="5">
                                         <DataGrid Name="LapRecordsGrid" ItemsSource="{Binding Records}" AutoGenerateColumns="False" Margin="5" Background="Transparent" RowBackground="Transparent" CanUserAddRows="False" CellEditEnding="LapRecordsGrid_CellEditEnding" Loaded="LapRecordsGrid_Loaded">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Header="Date" Binding="{Binding RecordDate, StringFormat=\{0:yyyy-MM-dd\}}" Width="80" IsReadOnly="True" />
@@ -249,6 +251,7 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="300"/>
+                                    <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
@@ -277,6 +280,16 @@
                                 <ComboBox Name="OverrideRR" Grid.Row="5" Grid.Column="1" IsEditable="True" Margin="0,2" />
 
                                 <Button Content="Save Overrides" Click="SaveOverrides_Click" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Margin="0,5,0,0" Padding="15,0" />
+
+                                <StackPanel Grid.Column="2" Grid.Row="1" Grid.RowSpan="6" Margin="20,2,0,0">
+                                    <TextBlock Text="Recommended Plugins:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                    <TextBlock TextWrapping="Wrap">
+                                        <Hyperlink NavigateUri="https://community.lemansultimate.com/index.php?threads/simhub-neored-plugins-and-dashboard-last-update-12-04-2026-v1-5-0-4.7638" RequestNavigate="Hyperlink_RequestNavigate">
+                                            LMU NeoRed Plugin
+                                        </Hyperlink>
+                                    </TextBlock>
+                                    <TextBlock Text="Automatically provides tyre compounds for Le Mans Ultimate." FontStyle="Italic" TextWrapping="Wrap" Margin="0,5,0,0" FontSize="10" Foreground="Gray"/>
+                                </StackPanel>
                             </Grid>
                         </GroupBox>
 

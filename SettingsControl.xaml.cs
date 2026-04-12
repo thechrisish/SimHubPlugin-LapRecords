@@ -23,6 +23,14 @@ namespace SimHubLapRecordPlugin
             LoadData();
             LoadColumnVisibilities();
             LoadTyreProperties();
+
+            Plugin.LapRecordUpdated += OnLapRecordUpdated;
+            this.Unloaded += (s, e) => Plugin.LapRecordUpdated -= OnLapRecordUpdated;
+        }
+
+        private void OnLapRecordUpdated(object sender, EventArgs e)
+        {
+            Dispatcher.BeginInvoke(new Action(() => LoadData()));
         }
 
         private void LoadData()
@@ -318,7 +326,7 @@ namespace SimHubLapRecordPlugin
             OverrideRR.ItemsSource = options;
 
             var trackedGames = Plugin.Settings.TrackRecords.Values.SelectMany(c => c.Values).Select(r => r.GameName);
-            var defaultGames = new[] { "AssettoCorsa", "AssettoCorsaCompetizione", "Automobilista", "Automobilista2", "BeamNg", "CodemastersDirtRally2", "EA_WRC", "F12022", "F123", "F124", "ForzaHorizon5", "ForzaMotorsport", "IRacing", "LeMansUltimate", "ProjectCars2", "RaceRoom", "RFactor2", "RichardBurnsRally" };
+            var defaultGames = new[] { "AssettoCorsa", "AssettoCorsaCompetizione", "ACEvo", "ACRally", "Automobilista", "Automobilista2", "BeamNg", "CodemastersDirtRally2", "EAWRC23", "F12022", "F12023", "F12024", "F12025", "ForzaHorizon5", "ForzaMotorsport", "IRacing", "LMU", "PCars2", "ProjectMotorRacing", "RaceRoom", "RFactor2", "RichardBurnsRally", "Wreckfest", "Wreckfest2" };
             
             var games = trackedGames.Concat(defaultGames).Where(g => !string.IsNullOrEmpty(g)).Distinct().OrderBy(x => x).ToList();
             GameOverrideCombo.ItemsSource = games;
@@ -616,12 +624,39 @@ namespace SimHubLapRecordPlugin
                 }
             }
         }
+
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            System.Diagnostics.Process.Start(e.Uri.AbsoluteUri);
+            e.Handled = true;
+        }
+
+        private void ExpandAll_Click(object sender, RoutedEventArgs e)
+        {
+            if (TrackItemsControl.ItemsSource is System.Collections.Generic.List<TrackViewModel> items)
+                foreach (var item in items) item.IsExpanded = true;
+        }
+
+        private void CollapseAll_Click(object sender, RoutedEventArgs e)
+        {
+            if (TrackItemsControl.ItemsSource is System.Collections.Generic.List<TrackViewModel> items)
+                foreach (var item in items) item.IsExpanded = false;
+        }
     }
 
-    public class TrackViewModel
+    public class TrackViewModel : System.ComponentModel.INotifyPropertyChanged
     {
         public string TrackName { get; set; }
         public List<LapRecord> Records { get; set; }
+
+        private bool _isExpanded = true;
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set { _isExpanded = value; PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(IsExpanded))); }
+        }
+
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
     }
 
     public class OverrideViewModel
