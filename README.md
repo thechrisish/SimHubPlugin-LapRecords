@@ -36,14 +36,17 @@ This Readme IS human written, even if AI gave me a readable template to use. :sm
 
 ## Known Issues
 * Tyre compound assignment overrides are a little fiddly.
+* No idea what impact on SimHub performance is with lots of lap times. Please report issues if you suspect this plugin is causing lag in SimHub.
 
-## Race Sims Tested (Accurate as of 29th March 2026)
+## Race Sims Tested (Accurate as of 15th April 2026)
 * :white_check_mark: Automobilista 2 - Track State data not available.
 * :white_check_mark: EA Sports WRC - Class, Session, Fuel, Track Temp, Track State and Tyre data not available.
 * :white_check_mark: Le Mans Ultimate - NeoRed plugin used to automatically populate tyre compounds.
 * :white_check_mark: rFactor 2
-* :x: Assetto Corsa Evo - No timing data in SimHub
+* :x: Assetto Corsa Evo - No timing data in SimHub (Looks like telemetry is available in 0.6, just need SimHub update!)
 * :x: Assetto Corsa Rally - No timing data in SimHub
+
+If a sim is not listed here it doesn't mean they won't work, they're just untested. If you happen to test any for me then please let me know and I'll update the list.
 
 ## Installation
 1.  Make sure SimHub is not running.
