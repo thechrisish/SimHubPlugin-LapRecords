@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 Changelog is written by Claude Sonnet and Gemini Pro.
 
+## [1.2.1] - 2026-04-16
+### Changed
+- Track name retrieval now prioritizes `GameData.TrackNameWithConfig` over `GameData.TrackName` if available.
+- Readme update - Assetto Corsa Evo now works from version 0.6 and SimHub 9.11.11.
+
 ## [1.2.0] - 2026-04-12
 ### Added
 - **LMU Tyre Properties Integration** — automatically detects and falls back to use the NeoRed plugin's properties for Le Mans Ultimate (LMU) if it is installed, fetching reliable data for all 4 tyre compounds without requiring manual override configuration.

@@ -42,7 +42,7 @@ This Readme IS human written, even if AI gave me a readable template to use. :sm
 * :white_check_mark: EA Sports WRC - Class, Session, Fuel, Track Temp, Track State and Tyre data not available.
 * :white_check_mark: Le Mans Ultimate - NeoRed plugin used to automatically populate tyre compounds.
 * :white_check_mark: rFactor 2
-* :x: Assetto Corsa Evo - No timing data in SimHub
+* :white_check_mark: Assetto Corsa Evo - ACE 0.6 and SimHub 9.11.11 Required.
 * :x: Assetto Corsa Rally - No timing data in SimHub
 
 ## Installation
