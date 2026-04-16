@@ -1,5 +1,3 @@
-# SimHub Lap Record Plugin
-
 The **Lap Record Plugin** for SimHub automatically tracks and logs your personal best lap times for each car and track combination.
 
 ## Disclaimer
@@ -9,6 +7,8 @@ The reason for using Claude and Gemini is because I need to learn it - my job is
 I can read and understand C# code, but I'm no good at writing it. Terraform, Ansible and Bash scripts are more my thing... With that in mind I'm more than happy for anyone to tear this apart and suggest where it can be improved.
 
 This Readme IS human written, even if AI gave me a readable template to use. :smile:
+
+<img width="1676" height="1379" alt="image" src="https://github.com/user-attachments/assets/06ec4d6d-7ffa-42f0-a6a1-ecbb581ac610" />
 
 ## Features
 *   **Automatic Lap Logging:** Automatically records your Best lap times for every car and track combination in supported sims.
@@ -36,14 +36,17 @@ This Readme IS human written, even if AI gave me a readable template to use. :sm
 
 ## Known Issues
 * Tyre compound assignment overrides are a little fiddly.
+* No idea what impact on SimHub performance is with lots of lap times. Please report issues if you suspect this plugin is causing lag in SimHub.
 
-## Race Sims Tested (Accurate as of 29th March 2026)
+## Race Sims Tested (Accurate as of 15th April 2026)
 * :white_check_mark: Automobilista 2 - Track State data not available.
 * :white_check_mark: EA Sports WRC - Class, Session, Fuel, Track Temp, Track State and Tyre data not available.
 * :white_check_mark: Le Mans Ultimate - NeoRed plugin used to automatically populate tyre compounds.
 * :white_check_mark: rFactor 2
 * :white_check_mark: Assetto Corsa Evo - ACE 0.6 and SimHub 9.11.11 Required.
 * :x: Assetto Corsa Rally - No timing data in SimHub
+
+If a sim is not listed here it doesn't mean they won't work, they're just untested. If you happen to test any for me then please let me know and I'll update the list.
 
 ## Installation
 1.  Make sure SimHub is not running.
@@ -57,8 +60,8 @@ This Readme IS human written, even if AI gave me a readable template to use. :sm
 1.  In SimHub > Lap Records > Settings - Press the **Backup All Settings...** button and save the file somewhere safe.
 2.  Make sure SimHub is not running.
 3.  Download the latest `SimHubLapRecordPlugin.dll` file.
-4.  Copy the `.dll` file into your SimHub installation directory, overwriting the existing file.
-    *   *By default, this is usually located at: `C:\Program Files (x86)\SimHub`*
+4.  Copy the `.dll` file into your SimHub installation directory. 
+    *   *This is usually located in `C:\Program Files (x86)\SimHub`*
 5.  Start SimHub.
 6.  If prompted, click **Enable** to activate the Lap Record Plugin.
 7.  (If no laptimes appear) In SimHub > Lap Records > Settings - Press the **Restore All Settings...** button and select the backup file you saved in step 1.
