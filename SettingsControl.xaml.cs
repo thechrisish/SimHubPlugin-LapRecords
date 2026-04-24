@@ -23,6 +23,14 @@ namespace SimHubLapRecordPlugin
             LoadData();
             LoadColumnVisibilities();
             LoadTyreProperties();
+
+            Plugin.LapRecordUpdated += OnLapRecordUpdated;
+            this.Unloaded += (s, e) => Plugin.LapRecordUpdated -= OnLapRecordUpdated;
+        }
+
+        private void OnLapRecordUpdated(object sender, EventArgs e)
+        {
+            Dispatcher.BeginInvoke(new Action(() => LoadData()));
         }
 
         private void LoadData()
@@ -77,10 +85,10 @@ namespace SimHubLapRecordPlugin
 
             TrackItemsControl.ItemsSource = trackViewModels;
 
-            // Bind Overrides
+            // Bind Car Overrides
             var overridesList = Plugin.Settings.CarNameOverrides.Select(kvp => new OverrideViewModel
             {
-                OriginalCarName = kvp.Key,
+                OriginalCarName  = kvp.Key,
                 OverriddenName = kvp.Value
             }).OrderBy(x => x.OriginalCarName).ToList();
             
@@ -94,6 +102,24 @@ namespace SimHubLapRecordPlugin
                 .OrderBy(c => c)
                 .ToList();
             NewOriginalCarNameCombo.ItemsSource = distinctCars;
+
+            // Bind Track Overrides
+            var trackOverridesList = Plugin.Settings.TrackNameOverrides.Select(kvp => new TrackOverrideViewModel
+            {
+                OriginalTrackName = kvp.Key,
+                UnifiedName       = kvp.Value
+            }).OrderBy(x => x.OriginalTrackName).ToList();
+
+            TrackOverridesGrid.ItemsSource = null;
+            TrackOverridesGrid.ItemsSource = trackOverridesList;
+
+            // Populate Track dropdown (all known raw track names)
+            var distinctTracks = Plugin.Settings.TrackRecords.Keys
+                .Concat(Plugin.Settings.TrackNameOverrides.Keys)
+                .Distinct()
+                .OrderBy(t => t)
+                .ToList();
+            NewOriginalTrackNameCombo.ItemsSource = distinctTracks;
         }
 
         private void Refresh_Click(object sender, RoutedEventArgs e)
@@ -120,12 +146,15 @@ namespace SimHubLapRecordPlugin
             {
                 Plugin.Settings.CarNameOverrides[original] = overriden;
                 
-                // Retroactively apply the override to existing records
+                // Retroactively apply the override to existing records, stamping OriginalCarName first
                 foreach (var track in Plugin.Settings.TrackRecords.Values)
                 {
                     if (track.ContainsKey(original))
                     {
                         var record = track[original];
+                        // Stamp OriginalCarName if not already set (migration for pre-existing records)
+                        if (string.IsNullOrEmpty(record.OriginalCarName))
+                            record.OriginalCarName = original;
                         record.CarName = overriden;
                         track.Remove(original);
                         track[overriden] = record;
@@ -147,14 +176,22 @@ namespace SimHubLapRecordPlugin
                 {
                     var overriden = Plugin.Settings.CarNameOverrides[model.OriginalCarName];
 
-                    // Revert the records back to the original name
-                    foreach (var track in Plugin.Settings.TrackRecords.Values)
+                    // Only revert records whose OriginalCarName matches this override's raw name.
+                    // This is safe even if multiple cars were merged into the same override name.
+                    foreach (var track in Plugin.Settings.TrackRecords.Values.ToList())
                     {
-                        if (track.ContainsKey(overriden))
+                        // Find all entries stored under the unified (overridden) name that originally
+                        // belonged to this specific car.
+                        var toRevert = track
+                            .Where(kvp => string.Equals(kvp.Key, overriden, StringComparison.Ordinal)
+                                       && string.Equals(kvp.Value.OriginalCarName, model.OriginalCarName, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+
+                        foreach (var kvp in toRevert)
                         {
-                            var record = track[overriden];
+                            track.Remove(kvp.Key);
+                            var record = kvp.Value;
                             record.CarName = model.OriginalCarName;
-                            track.Remove(overriden);
                             track[model.OriginalCarName] = record;
                         }
                     }
@@ -289,7 +326,7 @@ namespace SimHubLapRecordPlugin
             OverrideRR.ItemsSource = options;
 
             var trackedGames = Plugin.Settings.TrackRecords.Values.SelectMany(c => c.Values).Select(r => r.GameName);
-            var defaultGames = new[] { "AssettoCorsa", "AssettoCorsaCompetizione", "Automobilista", "Automobilista2", "BeamNg", "CodemastersDirtRally2", "EA_WRC", "F12022", "F123", "F124", "ForzaHorizon5", "ForzaMotorsport", "IRacing", "LeMansUltimate", "ProjectCars2", "RaceRoom", "RFactor2", "RichardBurnsRally" };
+            var defaultGames = new[] { "AssettoCorsa", "AssettoCorsaCompetizione", "ACEvo", "ACRally", "Automobilista", "Automobilista2", "BeamNg", "CodemastersDirtRally2", "EAWRC23", "F12022", "F12023", "F12024", "F12025", "ForzaHorizon5", "ForzaMotorsport", "IRacing", "LMU", "PCars2", "ProjectMotorRacing", "RaceRoom", "RFactor2", "RichardBurnsRally", "Wreckfest", "Wreckfest2" };
             
             var games = trackedGames.Concat(defaultGames).Where(g => !string.IsNullOrEmpty(g)).Distinct().OrderBy(x => x).ToList();
             GameOverrideCombo.ItemsSource = games;
@@ -413,14 +450,16 @@ namespace SimHubLapRecordPlugin
             var dialog = new Microsoft.Win32.SaveFileDialog
             {
                 Filter = "JSON Files|*.json",
-                FileName = $"SimHub_LapRecords_{DateTime.Now:yyyyMMdd_HHmm}.json"
+                FileName = $"SimHub_LapRecordPlugin_Backup_{DateTime.Now:yyyyMMdd_HHmm}.json"
             };
 
             if (dialog.ShowDialog() == true)
             {
-                var json = Newtonsoft.Json.JsonConvert.SerializeObject(Plugin.Settings.TrackRecords, Newtonsoft.Json.Formatting.Indented);
+                // Serialize the full Settings object so overrides, compounds and tyre mappings
+                // are all included alongside the lap records.
+                var json = Newtonsoft.Json.JsonConvert.SerializeObject(Plugin.Settings, Newtonsoft.Json.Formatting.Indented);
                 System.IO.File.WriteAllText(dialog.FileName, json);
-                MessageBox.Show("Lap records backup successfully saved.", "Backup Complete", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("All settings backed up successfully.", "Backup Complete", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -433,25 +472,141 @@ namespace SimHubLapRecordPlugin
 
             if (dialog.ShowDialog() == true)
             {
-                if (MessageBox.Show("Restoring this backup will completely overwrite your currently stored lap times. Are you sure you wish to proceed?", "Restore Backup", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                if (MessageBox.Show("Restoring this backup will completely overwrite all current settings and lap records. Are you sure?",
+                    "Restore Backup", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
                     try
                     {
                         var json = System.IO.File.ReadAllText(dialog.FileName);
-                        var records = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, SimHubLapRecordPlugin.Models.LapRecord>>>(json);
-                        if (records != null)
+
+                        // Try new-style backup first (full Settings object)
+                        Settings restored = null;
+                        try
                         {
-                            Plugin.Settings.TrackRecords = records;
-                            Plugin.SaveSettings();
-                            LoadData();
-                            MessageBox.Show("Records successfully restored.", "Restore Complete", MessageBoxButton.OK, MessageBoxImage.Information);
+                            restored = Newtonsoft.Json.JsonConvert.DeserializeObject<Settings>(json);
+                            // Sanity check: a records-only file will deserialize as Settings but
+                            // TrackRecords will be null because the root is a dictionary, not an object.
+                            if (restored?.TrackRecords == null) restored = null;
                         }
+                        catch { restored = null; }
+
+                        if (restored != null)
+                        {
+                            // New-style: replace the entire Settings object
+                            Plugin.Settings.TrackRecords         = restored.TrackRecords         ?? Plugin.Settings.TrackRecords;
+                            Plugin.Settings.CarNameOverrides     = restored.CarNameOverrides     ?? Plugin.Settings.CarNameOverrides;
+                            Plugin.Settings.TrackNameOverrides   = restored.TrackNameOverrides   ?? Plugin.Settings.TrackNameOverrides;
+                            Plugin.Settings.GameTyreOverrides    = restored.GameTyreOverrides    ?? Plugin.Settings.GameTyreOverrides;
+                            Plugin.Settings.TyreCompoundDefinitions = restored.TyreCompoundDefinitions ?? Plugin.Settings.TyreCompoundDefinitions;
+                            Plugin.Settings.ColumnVisibility     = restored.ColumnVisibility     ?? Plugin.Settings.ColumnVisibility;
+                        }
+                        else
+                        {
+                            // Legacy-style: records-only dictionary
+                            var records = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, SimHubLapRecordPlugin.Models.LapRecord>>>(json);
+                            if (records != null)
+                                Plugin.Settings.TrackRecords = records;
+                            else
+                                throw new InvalidOperationException("File does not contain recognisable backup data.");
+                        }
+
+                        Plugin.SaveSettings();
+                        LoadData();
+                        MessageBox.Show("Settings successfully restored.", "Restore Complete", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Failed to restore records. The file may be invalid or corrupt.\n\n" + ex.Message, "Restore Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Failed to restore settings. The file may be invalid or corrupt.\n\n" + ex.Message,
+                            "Restore Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
+            }
+        }
+
+        // ── Track Overrides ──────────────────────────────────────────────────────────
+
+        private void AddTrackOverride_Click(object sender, RoutedEventArgs e)
+        {
+            var original = NewOriginalTrackNameCombo.Text?.Trim();
+            var unified  = NewUnifiedTrackName.Text?.Trim();
+
+            if (string.IsNullOrEmpty(original) || string.IsNullOrEmpty(unified)) return;
+
+            Plugin.Settings.TrackNameOverrides[original] = unified;
+
+            // Ensure the unified bucket exists
+            if (!Plugin.Settings.TrackRecords.ContainsKey(unified))
+                Plugin.Settings.TrackRecords[unified] = new Dictionary<string, Models.LapRecord>();
+
+            // Move all records from the raw bucket into the unified bucket
+            if (Plugin.Settings.TrackRecords.TryGetValue(original, out var sourceBucket))
+            {
+                var destBucket = Plugin.Settings.TrackRecords[unified];
+                foreach (var kvp in sourceBucket)
+                {
+                    var record = kvp.Value;
+                    // Stamp OriginalTrackName if not already set (migration for pre-existing records)
+                    if (string.IsNullOrEmpty(record.OriginalTrackName))
+                        record.OriginalTrackName = original;
+                    // Use car name as key; last write wins if there's a collision
+                    destBucket[kvp.Key] = record;
+                }
+                Plugin.Settings.TrackRecords.Remove(original);
+            }
+
+            Plugin.SaveSettings();
+            LoadData();
+            NewOriginalTrackNameCombo.Text = "";
+            NewUnifiedTrackName.Text      = "";
+        }
+
+        private void RemoveTrackOverride_Click(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is Button btn && btn.DataContext is TrackOverrideViewModel model)) return;
+            if (!Plugin.Settings.TrackNameOverrides.ContainsKey(model.OriginalTrackName))   return;
+
+            var unified = Plugin.Settings.TrackNameOverrides[model.OriginalTrackName];
+
+            // Re-sort records in the unified bucket back to their original track buckets
+            // (only those whose OriginalTrackName matches this override)
+            if (Plugin.Settings.TrackRecords.TryGetValue(unified, out var unifiedBucket))
+            {
+                var toMove = unifiedBucket
+                    .Where(kvp => string.Equals(kvp.Value.OriginalTrackName, model.OriginalTrackName, StringComparison.OrdinalIgnoreCase)
+                               || string.IsNullOrEmpty(kvp.Value.OriginalTrackName))
+                    .ToList();
+
+                foreach (var kvp in toMove)
+                {
+                    var record    = kvp.Value;
+                    var targetKey = string.IsNullOrEmpty(record.OriginalTrackName) ? model.OriginalTrackName : record.OriginalTrackName;
+
+                    if (!Plugin.Settings.TrackRecords.ContainsKey(targetKey))
+                        Plugin.Settings.TrackRecords[targetKey] = new Dictionary<string, Models.LapRecord>();
+
+                    Plugin.Settings.TrackRecords[targetKey][kvp.Key] = record;
+                    unifiedBucket.Remove(kvp.Key);
+                }
+
+                // Remove unified bucket if now empty
+                if (unifiedBucket.Count == 0)
+                    Plugin.Settings.TrackRecords.Remove(unified);
+            }
+
+            Plugin.Settings.TrackNameOverrides.Remove(model.OriginalTrackName);
+            Plugin.SaveSettings();
+            LoadData();
+        }
+
+        private void TrackOverridesGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            if (e.EditAction == DataGridEditAction.Commit && e.Row.DataContext is TrackOverrideViewModel model)
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    Plugin.Settings.TrackNameOverrides[model.OriginalTrackName] = model.UnifiedName;
+                    Plugin.SaveSettings();
+                }), System.Windows.Threading.DispatcherPriority.Background);
             }
         }
 
@@ -469,18 +624,51 @@ namespace SimHubLapRecordPlugin
                 }
             }
         }
+
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            System.Diagnostics.Process.Start(e.Uri.AbsoluteUri);
+            e.Handled = true;
+        }
+
+        private void ExpandAll_Click(object sender, RoutedEventArgs e)
+        {
+            if (TrackItemsControl.ItemsSource is System.Collections.Generic.List<TrackViewModel> items)
+                foreach (var item in items) item.IsExpanded = true;
+        }
+
+        private void CollapseAll_Click(object sender, RoutedEventArgs e)
+        {
+            if (TrackItemsControl.ItemsSource is System.Collections.Generic.List<TrackViewModel> items)
+                foreach (var item in items) item.IsExpanded = false;
+        }
     }
 
-    public class TrackViewModel
+    public class TrackViewModel : System.ComponentModel.INotifyPropertyChanged
     {
         public string TrackName { get; set; }
         public List<LapRecord> Records { get; set; }
+
+        private bool _isExpanded = true;
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set { _isExpanded = value; PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(IsExpanded))); }
+        }
+
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
     }
 
     public class OverrideViewModel
     {
         public string OriginalCarName { get; set; }
         public string OverriddenName { get; set; }
+    }
+
+    public class TrackOverrideViewModel
+    {
+        public string OriginalTrackName { get; set; }
+        public string UnifiedName { get; set; }
     }
 
     [System.Windows.Data.ValueConversion(typeof(string), typeof(object))]

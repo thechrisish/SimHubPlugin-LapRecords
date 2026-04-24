@@ -13,6 +13,9 @@ namespace SimHubLapRecordPlugin
         // OriginalCarName -> OverriddenCarName
         public Dictionary<string, string> CarNameOverrides { get; set; } = new Dictionary<string, string>();
 
+        // OriginalTrackName -> UnifiedTrackName
+        public Dictionary<string, string> TrackNameOverrides { get; set; } = new Dictionary<string, string>();
+
         public Dictionary<string, GameTyreOverride> GameTyreOverrides { get; set; } = new Dictionary<string, GameTyreOverride>();
 
         // Legacy properties to prevent JSON deserialization crashes on old files
