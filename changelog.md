@@ -6,6 +6,51 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 Changelog is written by Claude Sonnet and Gemini Pro.
 
+## [1.2.2] - 2026-04-24
+### Fixed
+- Fixed lap completion detection incorrectly using `CompletedLaps` (which can increment for any car on track) instead of `CurrentLap` (player-only), causing the plugin to log lap data from other drivers in multiplayer sessions.
+
+## [1.2.1] - 2026-04-16
+### Changed
+- Track name retrieval now prioritizes `GameData.TrackNameWithConfig` over `GameData.TrackName` if available.
+- Readme update - Assetto Corsa Evo now works from version 0.6 and SimHub 9.11.11.
+
+## [1.2.0] - 2026-04-12
+### Added
+- **LMU Tyre Properties Integration** — automatically detects and falls back to use the NeoRed plugin's properties for Le Mans Ultimate (LMU) if it is installed, fetching reliable data for all 4 tyre compounds without requiring manual override configuration.
+- **AMS2 Tyre Compound Integration** — automatically reads tyre compound names from Automobilista 2's raw data properties (`mTyreCompound01`–`04`), providing accurate compound identification across all AMS2 tyre categories.
+- Added 17 new default tyre compound categories spanning across Automobilista 2 and EA Sports WRC, natively mapping slick, wet, treaded, and dirt configurations with their own individual naming abbreviations and color mapping.
+- Added a helpful direct hyperlink to the LMU NeoRed plugin threads alongside the Tyre Property Overrides section inside the settings window.
+- **Auto-Refresh** — the lap records data table now automatically refreshes in real-time immediately when a new personal best lap time is posted, resolving the need to manually click the "Refresh Data" button.
+- **Expand / Collapse All** — added toolbar buttons on the Lap Records tab to expand or collapse all track groups at once.
+
+### Changed
+- Refactored tyre compound retrieval into a game-agnostic fallback architecture. Game-specific fallback properties are resolved upfront and passed cleanly into `GetTyreVal`, making it trivial to add support for additional games.
+- Default tyre compound definitions are now auto-merged on plugin boot. Any new compounds added to the default catalogue in future updates will automatically appear in the user's list without overwriting existing customizations.
+
+## [1.1.0] - 2026-04-02
+### Added
+- **Track Name Overrides** — new "Track Overrides" tab with Add/Remove/inline-edit support. Map any raw sim track string (e.g. `monza_2024`) to a unified display name (e.g. `Monza`). Laps from multiple sims that share a unified name are stored in the same bucket, enabling true cross-sim records.
+- `OriginalCarName` and `OriginalTrackName` fields added to `LapRecord`. Set once at record creation to capture the raw sim values before any override is applied. Existing records are retroactively stamped when an override is first added.
+- `TrackNameOverrides` dictionary added to `Settings` for track merge persistence.
+
+### Changed
+- **Car Override unmerging** now uses `OriginalCarName` to identify which records belong to a specific override entry. Removing override "Car A" when "Car A" and "Car B" are both stored under the same unified name no longer incorrectly moves "Car B" laps.
+- **Backup/Restore** now saves and restores the entire `Settings` object (lap records, car overrides, track overrides, tyre compound definitions, tyre property mappings, column visibility) in a single file. Legacy backups containing only lap records are still detected and restored correctly.
+- Backup filename changed from `SimHub_LapRecords_*` to `SimHub_LapRecordPlugin_Backup_*` to reflect the broader scope.
+- "Backup Lap Records" and "Restore Lap Records" buttons renamed to "Backup All Settings" and "Restore All Settings".
+
+## [1.0.1] - 2026-03-29
+### Added
+- Expanded SimHub property endpoints extensively. The plugin now natively exposes `TrackState`, `TrackTemp`, `TyreFL`, `TyreFR`, `TyreRL`, `TyreRR`, and `Fuel` properties dynamically bound into the `CurrentCarBestLap` dataset.
+- Added a brand new, fully populated `CurrentClassBestLap` property tree replicating the entire parameter set. It dynamically scans and tracks the absolute best lap time across all cars specifically matching your current car's Class designation locally.
+
+### Changed
+- Scaled down the plugin's stopwatch icon by enclosing the geometry inside a transparent bounding box, ensuring visual parity with native SimHub side-menu icons.
+- Modified data injection and mapping loops across `Class`, `Session`, `Fuel Level`, and `Track Temp` columns to explicitly output correctly empty strings instead of default "Unknown" or zero placeholders when a game sim fails to provide targeted telemetry correctly.
+- *Note:* `Track State` retains its `"Unknown"` default string behavior to prevent WPF DataGridComboBoxColumn items mapping corruption across completely unpopulated historical cells.
+- Created robust legacy JSON data conversions safely translating old string flags back over to blank spaces locally upon data grid loading gracefully resolving data conflicts.
+
 ## [1.0.0] - 2026-03-28
 ### Added
 - Added a new `Settings` tab allowing column visibility customization and global tyre extraction parameters.

@@ -101,7 +101,7 @@ namespace SimHubLapRecordPlugin
             }
 
             // Detect new lap completion
-            if (data.OldData != null && data.NewData.CompletedLaps > data.OldData.CompletedLaps)
+            if (data.OldData != null && data.NewData.CurrentLap > data.OldData.CurrentLap)
             {
                 bool     lapValid    = !data.NewData.LapInvalidated;
                 TimeSpan lastLapTime = data.NewData.LastLapTime;
