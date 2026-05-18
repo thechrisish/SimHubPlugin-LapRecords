@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 Changelog is written by Claude Sonnet and Gemini Pro.
 
+## [Unreleased]
+### Added
+- **Excluded Games** — Added a new dual-panel interface in the Settings tab allowing users to selectively exclude specific games from lap tracking.
+
 ## [1.2.2] - 2026-04-24
 ### Fixed
 - Fixed lap completion detection incorrectly using `CompletedLaps` (which can increment for any car on track) instead of `CurrentLap` (player-only), causing the plugin to log lap data from other drivers in multiplayer sessions.

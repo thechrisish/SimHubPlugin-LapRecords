@@ -77,6 +77,9 @@ namespace SimHubLapRecordPlugin
 
             string trackName = data.NewData.TrackName ?? "UnknownTrack";
             string carName   = data.NewData.CarModel  ?? "UnknownCar";
+            string gameName  = data.GameName ?? "Unknown";
+
+            if (Settings.ExcludedGames.Contains(gameName)) return;
 
             if (Settings.CarNameOverrides.TryGetValue(carName, out var overridden) && !string.IsNullOrWhiteSpace(overridden))
                 carName = overridden;
@@ -132,7 +135,6 @@ namespace SimHubLapRecordPlugin
                         if (unitMode.Length > 1) unitMode = unitMode.Substring(0, 1).ToUpper();
                         string trackTempStr = $"{roadTemp:F1}°{unitMode}";
 
-                        string gameName = data.GameName ?? "Unknown";
                         if (!Settings.GameTyreOverrides.TryGetValue(gameName, out var gameOverride))
                             gameOverride = new GameTyreOverride();
 
