@@ -14,6 +14,7 @@ namespace SimHubLapRecordPlugin
         private bool _isUpdatingFilter = false;
         // 3.4: Cache the tyre property list — GetAllPropertiesNames() is expensive and the list is stable at runtime
         private List<string> _cachedTyreProperties = null;
+        private static readonly string[] DefaultGames = new[] { "AssettoCorsa", "AssettoCorsaCompetizione", "ACEvo", "ACRally", "Automobilista", "Automobilista2", "BeamNg", "CodemastersDirtRally2", "EAWRC23", "F12022", "F12023", "F12024", "F12025", "FH4", "FH5", "FH6", "ForzaMotorsport", "IRacing", "LMU", "PCars2", "ProjectMotorRacing", "RaceRoom", "RFactor2", "RichardBurnsRally", "Wreckfest", "Wreckfest2" };
 
         public SettingsControl(LapRecordPlugin plugin)
         {
@@ -23,6 +24,7 @@ namespace SimHubLapRecordPlugin
             LoadData();
             LoadColumnVisibilities();
             LoadTyreProperties();
+            LoadExcludedGames();
 
             Plugin.LapRecordUpdated += OnLapRecordUpdated;
             this.Unloaded += (s, e) => Plugin.LapRecordUpdated -= OnLapRecordUpdated;
@@ -326,9 +328,9 @@ namespace SimHubLapRecordPlugin
             OverrideRR.ItemsSource = options;
 
             var trackedGames = Plugin.Settings.TrackRecords.Values.SelectMany(c => c.Values).Select(r => r.GameName);
-            var defaultGames = new[] { "AssettoCorsa", "AssettoCorsaCompetizione", "ACEvo", "ACRally", "Automobilista", "Automobilista2", "BeamNg", "CodemastersDirtRally2", "EAWRC23", "F12022", "F12023", "F12024", "F12025", "ForzaHorizon5", "ForzaMotorsport", "IRacing", "LMU", "PCars2", "ProjectMotorRacing", "RaceRoom", "RFactor2", "RichardBurnsRally", "Wreckfest", "Wreckfest2" };
+
             
-            var games = trackedGames.Concat(defaultGames).Where(g => !string.IsNullOrEmpty(g)).Distinct().OrderBy(x => x).ToList();
+            var games = trackedGames.Concat(DefaultGames).Where(g => !string.IsNullOrEmpty(g)).Distinct().OrderBy(x => x).ToList();
             GameOverrideCombo.ItemsSource = games;
 
             CompoundsListControl.ItemsSource = Plugin.Settings.TyreCompoundDefinitions;
@@ -622,6 +624,48 @@ namespace SimHubLapRecordPlugin
                         col.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
                     }
                 }
+            }
+        }
+
+        private void LoadExcludedGames()
+        {
+            var trackedGames = Plugin.Settings.TrackRecords.Values.SelectMany(c => c.Values).Select(r => r.GameName);
+            var allGames = trackedGames.Concat(DefaultGames).Where(g => !string.IsNullOrEmpty(g)).Distinct().ToList();
+
+            var excluded = Plugin.Settings.ExcludedGames.ToList();
+            var available = allGames.Except(excluded).OrderBy(x => x).ToList();
+            excluded = excluded.OrderBy(x => x).ToList();
+
+            AvailableGamesList.ItemsSource = available;
+            ExcludedGamesList.ItemsSource = excluded;
+        }
+
+        private void ExcludeGame_Click(object sender, RoutedEventArgs e)
+        {
+            if (AvailableGamesList.SelectedItems.Count > 0)
+            {
+                foreach (string game in AvailableGamesList.SelectedItems.Cast<string>().ToList())
+                {
+                    if (!Plugin.Settings.ExcludedGames.Contains(game))
+                    {
+                        Plugin.Settings.ExcludedGames.Add(game);
+                    }
+                }
+                Plugin.SaveSettings();
+                LoadExcludedGames();
+            }
+        }
+
+        private void IncludeGame_Click(object sender, RoutedEventArgs e)
+        {
+            if (ExcludedGamesList.SelectedItems.Count > 0)
+            {
+                foreach (string game in ExcludedGamesList.SelectedItems.Cast<string>().ToList())
+                {
+                    Plugin.Settings.ExcludedGames.Remove(game);
+                }
+                Plugin.SaveSettings();
+                LoadExcludedGames();
             }
         }
 

@@ -127,6 +127,8 @@ namespace SimHubLapRecordPlugin
             string trackName = data.NewData.TrackNameWithConfig ?? data.NewData.TrackName ?? "UnknownTrack";
             string carName   = data.NewData.CarModel  ?? "UnknownCar";
             string gameName  = data.GameName ?? "Unknown";
+            if (Settings.ExcludedGames.Contains(gameName)) return;
+
             string carClass  = !string.IsNullOrWhiteSpace(data.NewData.CarClass) ? data.NewData.CarClass : "";
 
             string rawCarName = carName;

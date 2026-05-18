@@ -18,6 +18,8 @@ namespace SimHubLapRecordPlugin
 
         public Dictionary<string, GameTyreOverride> GameTyreOverrides { get; set; } = new Dictionary<string, GameTyreOverride>();
 
+        public List<string> ExcludedGames { get; set; } = new List<string>();
+
         // Legacy properties to prevent JSON deserialization crashes on old files
         public List<string> CustomTyreCompounds { get; set; }
         public string TyrePropertyOverrideFL { get; set; }
