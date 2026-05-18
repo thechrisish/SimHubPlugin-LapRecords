@@ -14,7 +14,7 @@ namespace SimHubLapRecordPlugin
         private bool _isUpdatingFilter = false;
         // 3.4: Cache the tyre property list — GetAllPropertiesNames() is expensive and the list is stable at runtime
         private List<string> _cachedTyreProperties = null;
-        private static readonly string[] DefaultGames = new[] { "AssettoCorsa", "AssettoCorsaCompetizione", "ACEvo", "ACRally", "Automobilista", "Automobilista2", "BeamNg", "CodemastersDirtRally2", "EAWRC23", "F12022", "F12023", "F12024", "F12025", "ForzaHorizon5", "ForzaMotorsport", "IRacing", "LMU", "PCars2", "ProjectMotorRacing", "RaceRoom", "RFactor2", "RichardBurnsRally", "Wreckfest", "Wreckfest2" };
+        private static readonly string[] DefaultGames = new[] { "AssettoCorsa", "AssettoCorsaCompetizione", "ACEvo", "ACRally", "Automobilista", "Automobilista2", "BeamNg", "CodemastersDirtRally2", "EAWRC23", "F12022", "F12023", "F12024", "F12025", "FH4", "FH5", "FH6", "ForzaMotorsport", "IRacing", "LMU", "PCars2", "ProjectMotorRacing", "RaceRoom", "RFactor2", "RichardBurnsRally", "Wreckfest", "Wreckfest2" };
 
         public SettingsControl(LapRecordPlugin plugin)
         {
