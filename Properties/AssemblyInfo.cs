@@ -2,7 +2,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("SimHubLapRecordPlugin")]
-[assembly: AssemblyDescription("Plugin for tracking best lap times across different track and car combinations")]
+[assembly: AssemblyDescription("SimHub Plugin for tracking best lap times across different track and car combinations")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SimHubLapRecordPlugin")]
