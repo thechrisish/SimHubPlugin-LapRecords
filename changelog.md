@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 Changelog is written by Claude Sonnet and Gemini Pro.
 
-## [Unreleased]
+## [1.3.0] - 2026-06-01
 ### Added
 - **Excluded Games** — Added a new dual-panel interface in the Settings tab allowing users to selectively exclude specific games from lap tracking.
 
